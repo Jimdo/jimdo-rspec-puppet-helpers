@@ -4,8 +4,8 @@ require File.expand_path('../lib/jimdo-rspec-puppet-helpers/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Daniel Bonkowski"]
   gem.email         = ["bonko@jimdo.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
+  gem.description   = %q{rspec-puppet helpers}
+  gem.summary       = %q{rspec-puppet helpers}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($\)
@@ -13,5 +13,5 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "jimdo-rspec-puppet-helpers"
   gem.require_paths = ["lib"]
-  gem.version       = Jimdo_rspec_puppet_helpers::VERSION
+  gem.version       = '0.0.2'
 end
