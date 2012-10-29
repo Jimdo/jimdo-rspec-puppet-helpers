@@ -1,0 +1,14 @@
+PATH
+  remote: .
+  specs:
+    jimdo-rspec-puppet-helpers (0.0.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  jimdo-rspec-puppet-helpers!
