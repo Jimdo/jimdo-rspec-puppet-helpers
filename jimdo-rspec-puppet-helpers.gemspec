@@ -1,6 +1,4 @@
 # -*- encoding: utf-8 -*-
-require File.expand_path('../lib/jimdo-rspec-puppet-helpers/version', __FILE__)
-
 Gem::Specification.new do |gem|
   gem.authors       = ["Daniel Bonkowski"]
   gem.email         = ["bonko@jimdo.com"]
