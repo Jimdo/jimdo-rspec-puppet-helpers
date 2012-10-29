@@ -1,4 +1,3 @@
-require "jimdo-rspec-puppet-helpers/version"
 require 'rspec'
 
 RSpec::Matchers.define :puppet_file_contains do |file, expected|
