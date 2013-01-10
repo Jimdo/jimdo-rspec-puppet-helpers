@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 Gem::Specification.new do |gem|
-  gem.authors       = ["Daniel Bonkowski"]
-  gem.email         = ["bonko@jimdo.com"]
+  gem.authors       = ["Daniel Bonkowski", "Ingo Oeser", "Soenke Ruempler"]
+  gem.email         = ["infrateam@jimdo.com" ]
   gem.description   = %q{rspec-puppet helpers}
   gem.summary       = %q{rspec-puppet helpers}
   gem.homepage      = ""
@@ -11,5 +11,5 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.name          = "jimdo-rspec-puppet-helpers"
   gem.require_paths = ["lib"]
-  gem.version       = '0.0.2'
+  gem.version       = '0.0.3'
 end
