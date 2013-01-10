@@ -8,13 +8,29 @@ RSpec::Matchers.define :puppet_file_contains do |file, expected|
     found_file = nil
     files.each do |catalog_file|
       sliced_path = catalog_file.split('/')
-      path = File.expand_path(
-        File.join(
-          sliced_path[1..2],
-          'files',
-          sliced_path.slice(3..sliced_path.length)
-         )
-      );
+      module_path = sliced_path[1..2]
+      relative_path_in_puppet_files = sliced_path.slice(3..sliced_path.length)
+
+      # check whether we have rspec fixtures
+      if File.directory?("./spec/fixtures") then
+        path = File.expand_path(
+          File.join(
+            'spec/fixtures',
+            module_path,
+            'files',
+            relative_path_in_puppet_files
+           )
+        );
+      # else use files in puppet source tree
+      else
+        path = File.expand_path(
+          File.join(
+            module_path,
+            'files',
+            relative_path_in_puppet_files
+           )
+        );
+      end
       if File.file?(path) then
         found_file = path
         break
