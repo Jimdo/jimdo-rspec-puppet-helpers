@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    jimdo-rspec-puppet-helpers (0.0.1)
+    jimdo-rspec-puppet-helpers (0.0.3)
 
 GEM
   remote: https://rubygems.org/
