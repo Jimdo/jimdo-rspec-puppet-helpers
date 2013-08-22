@@ -5,7 +5,7 @@ RSpec::Matchers.define :puppet_file_contains do |file, expected|
     @message = nil
     resource = actual.resource('file', file)
     if not resource then
-      @message = "expected #{resource} in catalog, not found!"
+      @message = "expected 'File[#{file}]' in catalog, not found!"
       next
     end
     source_attr = resource.to_hash[:source]
@@ -49,17 +49,15 @@ RSpec::Matchers.define :puppet_file_contains do |file, expected|
     end
 
     if !found_file then
+      @message = "no files specified in 'source' exist"
       false
     else
+      @message = "expected that #{file}(source=#{found_file}) matches #{expected}"
       expected.match(IO.read(found_file)) != nil
     end
   end
 
   failure_message_for_should do |actual|
-    if @message then
-      @message
-    else
-      "expected that it matches #{expected}"
-    end
+    @message
   end
 end
