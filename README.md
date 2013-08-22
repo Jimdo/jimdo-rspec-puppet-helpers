@@ -20,6 +20,11 @@ Or install it yourself as:
 
 TODO: Write usage instructions here
 
+## Testing
+
+    $ bundle install
+    $ bundle exec rake spec
+
 ## Contributing
 
 1. Fork it
