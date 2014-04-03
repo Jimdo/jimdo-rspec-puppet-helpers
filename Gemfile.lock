@@ -7,6 +7,9 @@ GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.2.4)
+    facter (1.7.3)
+    puppet (2.7.23)
+      facter (~> 1.5)
     rspec (2.14.1)
       rspec-core (~> 2.14.0)
       rspec-expectations (~> 2.14.0)
@@ -21,4 +24,5 @@ PLATFORMS
 
 DEPENDENCIES
   jimdo-rspec-puppet-helpers!
+  puppet (~> 2.7)
   rspec
