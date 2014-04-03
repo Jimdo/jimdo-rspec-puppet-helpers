@@ -2,7 +2,18 @@ require 'rspec'
 
 RSpec::Matchers.define :puppet_file_contains do |file, expected|
   match do |actual|
-    files = actual.resource('file', file).to_hash[:source].map do |catalog_file|
+    @message = nil
+    resource = actual.resource('file', file)
+    if not resource then
+      @message = "expected 'File[#{file}]' in catalog, not found!"
+      next
+    end
+    source_attr = resource.to_hash[:source]
+    if not source_attr then
+      @message = "expected source attribute on #{resource}, found: #{resource.to_hash.keys.join(",")}"
+      next
+    end
+    files = source_attr.map do |catalog_file|
       catalog_file.gsub(/^puppet:\/\//, '')
     end
     found_file = nil
@@ -38,13 +49,15 @@ RSpec::Matchers.define :puppet_file_contains do |file, expected|
     end
 
     if !found_file then
+      @message = "no files specified in 'source' exist"
       false
     else
+      @message = "expected that #{file}(source=#{found_file}) matches #{expected}"
       expected.match(IO.read(found_file)) != nil
     end
   end
 
   failure_message_for_should do |actual|
-    "expected that it matches #{expected}"
+    @message
   end
 end
