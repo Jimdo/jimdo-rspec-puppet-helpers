@@ -3,7 +3,7 @@
 This gem adds a single rspec helper method to puppet-rspec in order to test the contents of a `file`
 which has no `content` param, but a `source` param.
 
-It looks up the path (e. g. `puppet:///modules/sample/test.ini`) like puppet would no and compares its content to
+It looks up the path (e. g. `puppet:///modules/sample/test.ini`) like puppet would do and compares its content to
 a given regular expression.
 
 This is especially useful if you have a legacy codebase which excessively abuses `File->src`: E. g. you can do safe refactorings like this:
