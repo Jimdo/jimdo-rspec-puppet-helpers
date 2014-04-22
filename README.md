@@ -1,6 +1,27 @@
 # jimdo-rspec-puppet-helpers
 
-TODO: Write a gem description
+This gem adds a single rspec helper method to puppet-rspec in order to test the contents of a `file`
+which has no `content` param, but a `source` param.
+
+It looks up the path (e. g. `puppet:///modules/sample/test.ini`) like puppet would do and compares its content to
+a given regular expression.
+
+This is especially useful if you have a legacy codebase which excessively abuses `File->src`: E. g. you can do safe refactorings like this:
+
+ 1. Write tests for existing files with this helper
+ 
+        it 'should be able to upload 100 files in one HTTP POST' do
+          should puppet_file_contains('/etc/php5/php.ini', /^max_uploads = 100\n$/m)
+        end
+
+ 2. Refactor: Make thie `File` a template and replace `source` with `content`
+ 3. Adjust test:
+
+        should contain_file('/etc/php5/php.ini').with({
+          :content => /^max_uploads = 100\n$/m
+        })
+
+ 4. Use a module like inifile in order to get rid of the regular expression hell and in order to have real DESCRIPTIVE cfg mgmt.
 
 ## Installation
 
@@ -15,10 +36,6 @@ And then execute:
 Or install it yourself as:
 
     $ gem install jimdo-rspec-puppet-helpers
-
-## Usage
-
-TODO: Write usage instructions here
 
 ## Testing
 
