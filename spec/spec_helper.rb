@@ -1,1 +1,1 @@
-require 'lib/jimdo-rspec-puppet-helpers.rb'
+require 'jimdo-rspec-puppet-helpers'
