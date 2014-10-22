@@ -1,7 +1,17 @@
 require 'rspec'
 require 'puppet'
-require 'puppet/file_serving'
-require 'puppet/file_serving/metadata'
+
+def find_puppet_file(sources)
+  Array(sources).each do |source|
+    next unless source.start_with?("puppet:///modules")
+    elems = source.split("/")
+    Puppet[:modulepath].split(":").each do |modulepath|
+      filepath = File.join(modulepath, elems[4], "files", *elems[5..-1])
+      return filepath if File.exist?(filepath)
+    end
+  end
+  nil
+end
 
 RSpec::Matchers.define :puppet_file_contains do |file, expected|
   match do |actual|
@@ -17,19 +27,12 @@ RSpec::Matchers.define :puppet_file_contains do |file, expected|
       next
     end
 
-    file_data = nil
-    source_attr.each do |source|
-      file_data = Puppet::FileServing::Metadata.indirection.find(source)
-      break if file_data
-    end
-
-    if !file_data then
+    found_file = find_puppet_file(source_attr)
+    if found_file.nil? then
       @message = "no files specified in 'source' exist"
       next
     else
-      found_file = file_data.path
-
-      @message = "expected that #{file}(source=#{found_file}) matches #{expected}"
+      @message = "expected that #{file} (source=#{found_file}) matches #{expected}"
       expected.match(IO.read(found_file)) != nil
     end
   end

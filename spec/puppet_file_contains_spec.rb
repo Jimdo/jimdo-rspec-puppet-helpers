@@ -1,10 +1,14 @@
 require 'spec_helper'
 
 describe 'puppet_file_contains' do
+  before do
+    Puppet[:modulepath] = "spec/fixtures"
+  end
+
   context "resource not found" do
     subject {
-      catalog = double()
-      resource = double()
+      catalog = double
+      resource = double
       catalog.stub(:resource) { nil }
       catalog
     }
@@ -17,8 +21,8 @@ describe 'puppet_file_contains' do
 
   context "resource does not contain 'source' key" do
     subject {
-      catalog = double()
-      resource = double()
+      catalog = double
+      resource = double
       catalog.stub(:resource) { resource }
       resource.stub(:to_hash) { { :some_attribute => 1, :some_other_attribute => 2} }
       catalog
@@ -30,47 +34,49 @@ describe 'puppet_file_contains' do
     end
   end
 
-  context "resource is found, source is present" do
+  context "resource is found, file does not exist" do
     subject {
-      catalog = double()
-      resource = double()
+      catalog = double
+      resource = double
       catalog.stub(:resource) { resource }
       resource.stub(:to_hash) { { :source => ['puppet:///modules/modulex/path1', 'puppet:///modules/modulex/path2'] } }
       catalog
     }
 
-    context "no files found" do
-      it "will raise ExpectationNotMetError with 'expected source attribute'" do
-        Puppet::FileServing::Metadata.indirection.stub(:find) {
-          nil
-        }
-        expect {
-          should puppet_file_contains('/path/file', %r'regex')
-        }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /no files specified in 'source' exist/)
-      end
-    end
-
-    context "some file is found, but does not match regex" do
-      it "will raise ExpectationNotMetError with 'expected source attribute'" do
-        Puppet::FileServing::Metadata.indirection.stub(:find) {
-          double(:path => '/some/path/to/file')
-        }
-        IO.stub(:read).with('/some/path/to/file') { 'something else' }
-        expect {
-          should puppet_file_contains('/path/file', %r'regex')
-        }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /^#{Regexp.quote("expected that /path/file(source=/some/path/to/file) matches")}/)
-      end
-    end
-
-    context "some file is found and matches regex" do
-      it "will raise ExpectationNotMetError with 'expected source attribute'" do
-        Puppet::FileServing::Metadata.indirection.stub(:find) {
-          double(:path => '/some/path/to/file')
-        }
-        IO.stub(:read).with('/some/path/to/file') { 'I do match a regex' }
+    it "will raise ExpectationNotMetError with 'no files exist'" do
+      expect {
         should puppet_file_contains('/path/file', %r'regex')
-      end
+      }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /no files specified in 'source' exist/)
     end
   end
 
+  context "some file is found, but does not match regex" do
+    subject {
+      catalog = double
+      resource = double
+      catalog.stub(:resource) { resource }
+      resource.stub(:to_hash) { { :source => ['puppet:///modules/modulex/path1', 'puppet:///modules/modulex/somefile.txt'] } }
+      catalog
+    }
+
+    it "will raise ExpectationNotMetError with 'expected source attribute'" do
+      expect {
+        should puppet_file_contains('/path/file', %r'regex')
+      }.to raise_error(RSpec::Expectations::ExpectationNotMetError, /^#{Regexp.quote("expected that /path/file (source=#{Puppet[:modulepath]}/modulex/files/somefile.txt) matches")}/)
+    end
+  end
+
+  context "some file is found and matches regex" do
+    subject {
+      catalog = double
+      resource = double
+      catalog.stub(:resource) { resource }
+      resource.stub(:to_hash) { { :source => ['puppet:///modules/modulex/path1', 'puppet:///modules/modulex/anotherfile.txt'] } }
+      catalog
+    }
+
+    it "will raise no exception" do
+      should puppet_file_contains('/path/file', %r'some content')
+    end
+  end
 end
